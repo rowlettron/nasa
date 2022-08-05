@@ -6,7 +6,8 @@ import os
 #######################################
 
 import requests
-import json 
+import json
+from datetime import datetime
 
 def clearConsole():
     if os.name in ('nt','dos'):
@@ -30,15 +31,26 @@ def main():
         #print("Hello")
         #input("Press enter to exit")
 
-    jsonobject = getAPIData() 
+    daysDiff = calculateDays(start_date, end_date)
+    jsonobject = getAPIData(start_date, end_date)
 
-    extractData(jsonobject)
+    extractData(jsonobject, daysDiff)
 
-def getAPIData():
+def calculateDays(start_date, end_date):
+    date_format = "%Y-%m-%d"
+    d0 = datetime.strptime(start_date, date_format)
+    d1 = datetime.strptime(end_date, date_format)
+
+    delta = d1 - d0
+    days = delta.days
+
+    return days
+
+def getAPIData(start_date, end_date):
     print('')
 
-    start_date = "2022-07-10"
-    end_date = "2022-07-20"
+    #start_date = "2022-07-10"
+    #end_date = "2022-07-20"
 
     api_key = "CAejpD9hOfWhaGxZyv2p6bS9A7HmBP1Sf53Vp8yi"
     url = "https://api.nasa.gov/planetary/apod"
@@ -50,37 +62,35 @@ def getAPIData():
     response = requests.get(url, params=params)
     #print(response)
 
-    jsonobject = response.json() 
+    jsonobject = response.json()
 
     return jsonobject
 
-def extractData(dataobject):
+def extractData(dataobject, days):
+    topindex = days
 
-    #for item in dataobject[]:
-    #    copyright = item["copyright"]
+    for index in range(topindex):
+        print(index)
+        date = dataobject[index]["date"]
+        explanation = dataobject[index]["explanation"]
+        hdurl = dataobject[index]["hdurl"]
+        media_type = dataobject[index]["media_type"]
+        service_version = dataobject[index]["service_version"]
+        title = dataobject[index]["title"]
+        sdurl = dataobject[index]["url"]
 
-    copyright = dataobject[0]["copyright"]
-    #date = dataobject["date"]
-    #explanation = dataobject["explanation"]
-    #hdurl = dataobject["hdurl"]
-    #media_type = dataobject["media_type"]
-    #service_version = dataobject["service_version"]
-    #title = dataobject["title"]
-    #sdurl = dataobject["url"]
-
-    print("Copyright: {0}".format(copyright))
-
-    #print("Date: {0}".format(date))
-    #print("Explanation: {0}".format(explanation))
-    #print("HDURL: {0}".format(hdurl))
-    #print("Media Type: {0}".format(media_type))
-    #print("Service Version: {0}".format(service_version))
-    #print("Title: {0}".format(title))
-    #print("URL: {0}".format(sdurl))
+        print("Date: {0}".format(date))
+        print("Explanation: {0}".format(explanation))
+        print("HDURL: {0}".format(hdurl))
+        print("Media Type: {0}".format(media_type))
+        print("Service Version: {0}".format(service_version))
+        print("Title: {0}".format(title))
+        print("URL: {0}".format(sdurl))
 
 
 ################# Main Processing Section ##############################
 
 if __name__ == '__main__':
+    start_date = '2022-07-10'
+    end_date = '2022-07-20'
     main()
-
