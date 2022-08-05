@@ -8,6 +8,7 @@ import os
 import requests
 import json
 from datetime import datetime
+import urllib.request
 
 def clearConsole():
     if os.name in ('nt','dos'):
@@ -17,7 +18,7 @@ def clearConsole():
 
     os.system(command)
 
-# print(platform.system)
+    #print(os.getcwd())
 
 
 def main():
@@ -69,6 +70,9 @@ def getAPIData(start_date, end_date):
 def extractData(dataobject, days):
     topindex = days
 
+    currentDirectory = os.getcwd()
+    imageDirectory = currentDirectory + "\\images\\"
+
     for index in range(topindex):
         print(index)
         date = dataobject[index]["date"]
@@ -79,6 +83,9 @@ def extractData(dataobject, days):
         title = dataobject[index]["title"]
         sdurl = dataobject[index]["url"]
 
+        imageName = imageDirectory + title + ".jpg"
+        urllib.request.urlretrieve(hdurl, imageName)
+
         print("Date: {0}".format(date))
         print("Explanation: {0}".format(explanation))
         print("HDURL: {0}".format(hdurl))
@@ -86,6 +93,9 @@ def extractData(dataobject, days):
         print("Service Version: {0}".format(service_version))
         print("Title: {0}".format(title))
         print("URL: {0}".format(sdurl))
+        print("")
+        print("###################################################################################")
+        print("")
 
 
 ################# Main Processing Section ##############################
