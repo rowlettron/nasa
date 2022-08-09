@@ -29,7 +29,11 @@ def main():
 
     manifest = getAPIData(url)
     #print(manifest)
-    #print(type(manifest))
+    print(type(manifest))
+
+    #photos = manifest['photos']
+
+    #print(photos)
 
     df = pd.json_normalize(manifest)
     df.rename(columns = {'photo_manifest.name':'lander_name',
