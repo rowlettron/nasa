@@ -11,29 +11,35 @@ from datetime import datetime
 import urllib.request
 import sys
 import pandas as pd
+import os
 
 def main():
 
+    rover = sys.argv[1]
+    currentDirectory = os.getcwd()
+
     if platform == "darwin":
         os_platform = "Mac"
+        excelFile = currentDirectory + "/" + rover + ".xlsx"
         clearConsole()
     else:
         os_platform = "Windows"
+        excelFile = currentDirectory + "\\" + rover + ".xlsx"
         clearConsole()
 
-    rover = sys.argv[1]
+
+
     #print(rover)
 
     url = "https://api.nasa.gov/mars-photos/api/v1/manifests/" + rover + "/?api_key=CAejpD9hOfWhaGxZyv2p6bS9A7HmBP1Sf53Vp8yi"
     print(url)
+    #weatherobject = json.loads(data.decode("utf-8"))
 
     manifest = getAPIData(url)
-    #print(manifest)
-    print(type(manifest))
 
-    #photos = manifest['photos']
+    photolist = manifest['photo_manifest']['photos']
 
-    #print(photos)
+
 
     df = pd.json_normalize(manifest)
     df.rename(columns = {'photo_manifest.name':'lander_name',
@@ -47,8 +53,11 @@ def main():
 
     df.drop(columns=['photos'], inplace=True)
 
-    print(df)
+    df1 = pd.DataFrame(photolist)
+    with pd.ExcelWriter(excelFile, mode="a", engine="openpyxl") as writer:
 
+        df.to_excel(writer, sheet_name="Lander")
+        df1.to_excel(writer, sheet_name="Details")
 
 
 def clearConsole():
