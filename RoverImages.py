@@ -1,3 +1,4 @@
+#python RoverImages.py "curiosity" "NAVCAM" "2015-08-04"
 
 from sys import platform
 import os
@@ -64,26 +65,52 @@ def main():
 
         clearConsole()
 
-    print('Rover: {0}', rover)
-    print('Camera: {0}', camera)
-    print('EarthDate: {0}', earth_date)
+    print('Rover: {0}'.format(rover))
+    print('Camera: {0}'.format(camera))
+    print('EarthDate: {0}'.format(earth_date))
 
     data = getAPIData(rover, earth_date, camera, api_key)
 
-    print(data)
+    parseAPIData(data, roverCameraFolder)
 
 def getAPIData(rover, earth_date, camera, api_key):
     params = {'earth_date': earth_date, 'camera': camera, 'api_key': api_key}   
 
     url = 'https://api.nasa.gov/mars-photos/api/v1/rovers/' + rover + '/photos?'
 
-    print(url)
+    #print(url)
 
-    data = requests.get(url, params=params)
+    response = requests.get(url, params=params)
 
-    data = json.loads(data.text)
+    jsonobject = json.loads(response.text)
 
-    return data 
+    return jsonobject  
+
+def parseAPIData(jsonobject, roverCameraFolder):
+    #print("Parsing api data")
+
+    #print(type(jsonobject))
+    #print(jsonobject)
+
+    #data = jsonobject
+    #print(type(data))
+
+
+    for item in jsonobject['photos']:
+        id = item['id']
+        sol = item["sol"]
+        img_src = item['img_src']
+
+        print("id: {0}".format(id))
+        print("sol: {0}".format(sol))
+        print("img_src: {0}".format(img_src))
+
+        imageName = roverCameraFolder + str(id) + '.jpg'
+        urllib.request.urlretrieve(img_src, imageName)
+
+def saveImageFile():
+    print('')
+
 
 
 ################# Main Processing Section ##############################
