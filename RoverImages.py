@@ -80,6 +80,7 @@ def main():
     parseAPIData(data, roverCameraFolder)
 
 def getAPIData(rover, earth_date, camera, api_key):
+    print(api_key)
     params = {'earth_date': earth_date, 'camera': camera, 'api_key': api_key}   
 
     url = 'https://api.nasa.gov/mars-photos/api/v1/rovers/' + rover + '/photos?'
