@@ -13,6 +13,12 @@ import urllib.request
 import sys
 import pandas as pd
 import os
+from configparser import ConfigParser
+
+def get_api_key():
+    config = ConfigParser()
+    config.read("nasa.ini")
+    return config["nasa"]["api_key"]
 
 def clearConsole():
     if os.name in ('nt','dos'):
@@ -32,7 +38,7 @@ def main():
 
     currentDirectory = os.getcwd()
 
-    api_key = 'CAejpD9hOfWhaGxZyv2p6bS9A7HmBP1Sf53Vp8yi'
+    api_key = get_api_key()
 
     if platform == "darwin":
         os_platform = "Mac"

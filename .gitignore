@@ -6,7 +6,7 @@ __pycache__/
 # C extensions
 *.so
 
-nasa.ini 
+*.ini 
 
 # Distribution / packaging
 .Python
